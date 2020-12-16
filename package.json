@@ -4,7 +4,7 @@
   "description": "fastify js pg ",
   "main": "index.js",
   "scripts": {
-    "start:dev": "cross-env NODE_PATH=./src nodemon ./src/index.js --exec babel-node --watch",
+    "dev": "cross-env NODE_PATH=./src nodemon ./src/index.js --exec babel-node --watch",
     "start": "cross-env NODE_PATH=./src babel-node ./src/index.js"
   },
   "repository": {
@@ -18,7 +18,10 @@
   },
   "homepage": "https://github.com/dan-exxx1st/vudo-backend#readme",
   "dependencies": {
-    "fastify": "^3.8.0"
+    "fastify": "^3.8.0",
+    "knex": "^0.21.12",
+    "objection": "^2.2.3",
+    "pg": "^8.5.1"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
