@@ -1,25 +1,25 @@
 import { FastifyInstance, FastifyRequest } from "fastify";
+import { IProviders } from "services/provide";
 
-import { TodoRepository } from "repositories/todo";
+type CustomRequest = FastifyRequest<{
+  Body: { text: string; folderId: string };
+}>;
 
-export function TodoController(app: FastifyInstance, options: {}, done: Function) {
-  const todoRepository = new TodoRepository();
+export function TodoController(app: FastifyInstance, options: IProviders, done: Function) {
+  const { todoService } = options.providers;
+
   app.get("/todos", async (_, res) => {
-    console.log(await todoRepository.find({ done: false }));
-    res.send({ status: "Todos!" });
+    const todos = await todoService.findAll();
+    return res.send({ todos });
   });
 
-  type CustomRequest = FastifyRequest<{
-    Body: { text: string };
-  }>;
-
   app.post("/todo", async (req: CustomRequest, res) => {
-    if (req.body && req.body.text) {
-      const { text } = req.body;
-      const newTodo = await todoRepository.create(text);
+    if (req.body && req.body.text && req.body.folderId) {
+      const { text, folderId } = req.body;
+      const newTodo = await todoService.createTodo({ text, folderId });
       return res.send({ todo: newTodo });
     } else {
-      return res.send({ message: "Text option was not found." });
+      return res.status(400).send({ message: "You didn't pass a text or folderId parameter." });
     }
   });
 
