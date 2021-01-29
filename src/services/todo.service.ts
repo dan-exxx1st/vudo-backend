@@ -41,4 +41,9 @@ export class TodoService {
     const data = await Todo.query().select();
     return data;
   }
+
+  async findAllByFolderId(folderId: string) {
+    const todos = await Todo.query().select().where({ folderId });
+    return todos;
+  }
 }

@@ -1,19 +1,31 @@
 import { FastifyInstance, FastifyRequest } from "fastify";
 import { IProviders } from "services/provide";
 
-type CustomRequest = FastifyRequest<{
+interface IGetTodosQuery {
+  folderId?: string;
+}
+
+type CreateRequest = FastifyRequest<{
   Body: { text: string; folderId: string };
 }>;
 
 export function TodoController(app: FastifyInstance, options: IProviders, done: Function) {
   const { todoService } = options.providers;
 
-  app.get("/todos", async (_, res) => {
-    const todos = await todoService.findAll();
+  app.get<{
+    Querystring: IGetTodosQuery;
+  }>("/todos", async (req, res) => {
+    let todos = [];
+
+    if (req.query.folderId) {
+      todos = await todoService.findAllByFolderId(req.query.folderId);
+    } else {
+      todos = await todoService.findAll();
+    }
     return res.send({ todos });
   });
 
-  app.post("/todo", async (req: CustomRequest, res) => {
+  app.post("/todo", async (req: CreateRequest, res) => {
     if (req.body && req.body.text && req.body.folderId) {
       const { text, folderId } = req.body;
       const newTodo = await todoService.createTodo({ text, folderId });
