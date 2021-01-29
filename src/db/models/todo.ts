@@ -21,7 +21,7 @@ export class Todo extends Model {
       properties: {
         id: { type: "uuid" },
         text: { type: "text" },
-        done: { type: "bool", default: false },
+        done: { type: "boolean", default: false },
         folderId: { type: "uuid" },
       },
     };

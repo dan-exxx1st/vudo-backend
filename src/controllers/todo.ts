@@ -9,6 +9,13 @@ type CreateRequest = FastifyRequest<{
   Body: { text: string; folderId: string };
 }>;
 
+type UpdateDoneRequest = FastifyRequest<{
+  Body: {
+    todoId?: string;
+    done?: boolean;
+  };
+}>;
+
 export function TodoController(app: FastifyInstance, options: IProviders, done: Function) {
   const { todoService } = options.providers;
 
@@ -33,6 +40,16 @@ export function TodoController(app: FastifyInstance, options: IProviders, done: 
     } else {
       return res.status(400).send({ message: "You didn't pass a text or folderId parameter." });
     }
+  });
+
+  app.put("/todo", async (req: UpdateDoneRequest, res) => {
+    if (req.body.todoId && req.body.done !== undefined) {
+      const { todoId, done } = req.body;
+      const updatedTodo = await todoService.updateTodoDone({ todoId, done });
+      return res.send({ todo: updatedTodo });
+    }
+
+    return res.status(400).send({ message: "You didn't pass a todo if or done status." });
   });
 
   done();

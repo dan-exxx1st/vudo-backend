@@ -46,4 +46,13 @@ export class TodoService {
     const todos = await Todo.query().select().where({ folderId });
     return todos;
   }
+
+  async updateTodoDone(payload: { todoId: string; done: boolean }) {
+    const { todoId, done } = payload;
+    const updatedTodo = await Todo.query().findById(todoId).patch({
+      done: done,
+    });
+
+    return updatedTodo;
+  }
 }
