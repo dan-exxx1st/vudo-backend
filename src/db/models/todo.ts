@@ -1,13 +1,13 @@
 import { Model } from "objection";
+import { Folder } from "./folder";
 
 export class Todo extends Model {
   id: string | undefined;
   text: string | undefined;
   done: boolean | undefined;
+  folderId: string | undefined;
 
-  static get tableName() {
-    return "todos";
-  }
+  static tableName = "todos";
 
   static get idColumn() {
     return "id";
@@ -16,13 +16,25 @@ export class Todo extends Model {
   static get jsonSchema() {
     return {
       type: "object",
-      required: ["text"],
+      required: ["text", "folderId"],
 
       properties: {
         id: { type: "uuid" },
         text: { type: "text" },
-        done: { type: "bool", default: false },
+        done: { type: "boolean", default: false },
+        folderId: { type: "uuid" },
       },
     };
   }
+
+  static relationMappings = {
+    todos: {
+      relation: Model.HasOneRelation,
+      modelClass: Folder,
+      join: {
+        from: "todos.folderId",
+        to: "folders.id",
+      },
+    },
+  };
 }
