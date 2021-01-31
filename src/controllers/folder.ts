@@ -3,14 +3,21 @@ import { IProviders } from "services/provide";
 
 type CreateRequest = FastifyRequest<{
   Body: {
-    name: string;
-    color: string;
+    name?: string;
+    color?: string;
+  };
+}>;
+
+type UpdateRequest = FastifyRequest<{
+  Body: {
+    folderId?: string;
+    name?: string;
   };
 }>;
 
 type DeleteTodo = FastifyRequest<{
   Body: {
-    id: string;
+    id?: string;
   };
 }>;
 
@@ -30,6 +37,16 @@ export function FolderController(app: FastifyInstance, options: IProviders, done
       return res.send({ folder });
     } else {
       return res.status(400).send({ message: "You didn't pass a name or color parameters." });
+    }
+  });
+
+  app.put("/folder", async (req: UpdateRequest, res) => {
+    if (req.body && req.body.name && req.body.folderId) {
+      const { name, folderId } = req.body;
+      const updatedFolder = await folderService.updateFolderName({ name, id: folderId });
+      return res.send({ folder: updatedFolder });
+    } else {
+      return res.status(400).send({ message: "You didn't pass a id or name parameters." });
     }
   });
 
