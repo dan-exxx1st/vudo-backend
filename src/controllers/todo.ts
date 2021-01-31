@@ -16,6 +16,12 @@ type UpdateDoneRequest = FastifyRequest<{
   };
 }>;
 
+type DeleteTodo = FastifyRequest<{
+  Body: {
+    todoId?: string;
+  };
+}>;
+
 export function TodoController(app: FastifyInstance, options: IProviders, done: Function) {
   const { todoService } = options.providers;
 
@@ -50,6 +56,22 @@ export function TodoController(app: FastifyInstance, options: IProviders, done: 
     }
 
     return res.status(400).send({ message: "You didn't pass a todo if or done status." });
+  });
+
+  app.delete("/todo", async (req: DeleteTodo, res) => {
+    if (req.body.todoId) {
+      const { todoId } = req.body;
+
+      const deletedTodo = await todoService.deleteTodo(todoId);
+
+      if (deletedTodo instanceof Error) {
+        return res.status(500).send({ message: deletedTodo.message });
+      } else {
+        return res.send({ todo: deletedTodo });
+      }
+    } else {
+      return res.status(400).send({ message: "You didn't pass a todo id" });
+    }
   });
 
   done();

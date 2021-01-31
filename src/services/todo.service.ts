@@ -19,19 +19,13 @@ export class TodoService {
     return createdTodo;
   }
 
-  async findTodo(options: { id?: string; text?: string }) {
-    let data = {};
+  async findTodo(options: { id?: string; text?: string }): Promise<Todo | undefined> {
+    let data;
 
-    switch (options) {
-      case "id": {
-        data = await Todo.query().findOne({ id: options.id });
-        break;
-      }
-
-      case "text": {
-        data = await Todo.query().findOne({ text: options.text });
-        break;
-      }
+    if (options.id) {
+      data = await Todo.query().findById(options.id);
+    } else if (options.text) {
+      data = await Todo.query().findOne({ text: options.text });
     }
 
     return data;
@@ -54,5 +48,16 @@ export class TodoService {
     });
 
     return updatedTodo;
+  }
+
+  async deleteTodo(id: string) {
+    const todoForDelete = await this.findTodo({ id });
+
+    if (!todoForDelete) {
+      return new Error("Todo for delete was not found.");
+    } else {
+      await Todo.query().delete().where({ id });
+      return todoForDelete;
+    }
   }
 }
