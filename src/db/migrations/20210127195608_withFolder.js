@@ -4,6 +4,7 @@ function createUsers(knex) {
       return knex.schema.createTable("folders", (table) => {
         table.uuid("id").primary();
         table.text("name");
+        table.text("color");
       });
     }
   });

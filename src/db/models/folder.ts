@@ -4,6 +4,7 @@ import { Todo } from "./todo";
 export class Folder extends Model {
   id: string | undefined;
   name: string | undefined;
+  color: string | undefined;
 
   static tableName = "folders";
 
@@ -14,11 +15,12 @@ export class Folder extends Model {
   static get jsonSchema() {
     return {
       type: "object",
-      required: ["name"],
+      required: ["name", "color"],
 
       properties: {
         id: { type: "uuid" },
         name: { type: "text" },
+        color: { type: "text" },
       },
     };
   }
