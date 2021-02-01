@@ -1,11 +1,20 @@
+import { parse } from "pg-connection-string";
+
+const connectionOptions = process.env.DATABASE_URL
+  ? parse(process.env.DATABASE_URL)
+  : {
+      database: process.env.DB_NAME || "vudo",
+      user: process.env.DB_USER || "postgres",
+      password: process.env.DB_PASSWORD || "123",
+      host: process.env.DB_HOST || "localhost",
+      port: process.env.DB_PORT || "5432",
+    };
+
 const config = {
   client: "postgres",
-  connection: process.env.DATABASE_URL || {
-    database: process.env.DB_NAME || "vudo",
-    user: process.env.DB_USER || "postgres",
-    password: process.env.DB_PASSWORD || "123",
-    host: process.env.DB_HOST || "localhost",
-    port: process.env.DB_PORT || "5432",
+  connection: {
+    ssl: !process.env.DATABASE_URL ? false : { rejectUnauthorized: false },
+    ...connectionOptions,
   },
   pool: {
     min: 2,
