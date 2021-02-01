@@ -1,6 +1,6 @@
 const config = {
   client: "postgres",
-  connection: {
+  connection: process.env.DATABASE_URL || {
     database: process.env.DB_NAME || "vudo",
     user: process.env.DB_USER || "postgres",
     password: process.env.DB_PASSWORD || "123",

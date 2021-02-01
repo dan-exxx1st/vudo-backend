@@ -20,6 +20,19 @@ export class FolderService {
     return newFolder;
   }
 
+  async updateFolderName(payload: { name: string; id: string }) {
+    const { id, name } = payload;
+    const updatedRows = await Folder.query()
+      .patch({
+        name,
+      })
+      .where({ id });
+    if (updatedRows) {
+      const updatedFolder = Folder.query().findById(id);
+      return updatedFolder;
+    }
+  }
+
   async deleteFolder(id: string) {
     const folderForDelete = await Folder.query().findById(id);
     if (folderForDelete) {
