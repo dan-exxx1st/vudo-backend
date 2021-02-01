@@ -13,6 +13,7 @@ export function createServer() {
 
   app.register(fastifyCors);
 
+  //@ts-ignore
   Model.knex(Knex(knexSettings));
 
   app.register<IProviders>(Routes, { prefix: "/api", providers });

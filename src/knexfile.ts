@@ -1,6 +1,6 @@
 import { parse } from "pg-connection-string";
 
-const connectionOptions: any = process.env.DATABASE_URL
+const connectionOptions = process.env.DATABASE_URL
   ? parse(process.env.DATABASE_URL)
   : {
       database: process.env.DB_NAME || "vudo",
