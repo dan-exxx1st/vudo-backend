@@ -21,7 +21,7 @@
     "start:prod": "NODE_ENV=production NODE_PATH=./dist node ./dist/index.js",
     "db:migrate": "knex migrate:latest --esm --knexfile ./src/knexfile.ts",
     "db:rollback": "knex migrate:rollback --esm --knexfile ./src/knexfile.ts",
-    "heroku-postbuild": "npm install -g knex && npm run db:rollback && npm run db:migrate npm run build"
+    "heroku-postbuild": "npm install -g knex && npm run db:rollback && npm run db:migrate && npm run build"
   },
   "dependencies": {
     "fastify": "^3.8.0",
