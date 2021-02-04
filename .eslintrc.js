@@ -12,5 +12,7 @@ module.exports = {
     sourceType: "module",
   },
   plugins: ["import", "jest", "prettier", "eslint-plugin-node"],
-  rules: {},
+  rules: {
+    "jest/no-mocks-import": "off",
+  },
 };

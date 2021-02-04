@@ -1,10 +1,16 @@
 import { v4 } from "uuid";
 
 import { Todo } from "db/models/todo";
+import { Folder } from "db/models/folder";
 
 export class TodoService {
   async createTodo(params: { text: string; folderId: string }) {
     const { text, folderId } = params;
+    const folder = await Folder.query().findById(folderId);
+
+    if (!folder || !folder.id) {
+      throw new Error("Folder was not found.");
+    }
     const newTodo = {
       id: v4(),
       text,
